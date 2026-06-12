@@ -1,0 +1,5 @@
+agile-stratum-499202-h1-0a38856z...json
+*.json
+__pycache__/
+.vscode/
+*.pyc
