@@ -28,12 +28,12 @@ GUI_SIZE        = (640, 360)
 DISPLAY_EVERY   = 2        # send every Nth frame to GUI
 INFER_EVERY     = 2        # run inference every Nth frame, reuse last result otherwise
 SEGMENT_SECONDS = 3600     # 1 hour per file
-OUTPUT_DIR      = r"C:\Pose Estimation\video"
+OUTPUT_DIR      = os.getenv("OUTPUT_DIR", "./output")
 WARMUP_FRAMES   = 10
 CONF_THRESHOLD  = 0.45
-GDRIVE_ENABLED          = True
-SERVICE_ACCOUNT_JSON    = r"C:\Users\USER\OneDrive\Desktop\projects\Sleeping(COde)\agile-stratum-499202-h1-0a388562f734.json"
-GDRIVE_FOLDER_ID        = "1T7G-6zncA8Q2zYrAwq4nm15oBIHDlbtn"
+GDRIVE_ENABLED          = os.getenv("GDRIVE_ENABLED", "false").lower() == "true"
+SERVICE_ACCOUNT_JSON    = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON")
+GDRIVE_FOLDER_ID        = os.getenv("GDRIVE_FOLDER_ID")
 GDRIVE_MAX_RETRIES      = 5     # attempts per file before giving up
 
 
@@ -87,6 +87,15 @@ def upload_to_gdrive(filepath: str, log_cb=None):
         return
     if not _GDRIVE_AVAILABLE:
         _log("google-api-python-client not installed — skipping upload.")
+        return
+    if not SERVICE_ACCOUNT_JSON or not GDRIVE_FOLDER_ID:
+        _log(
+            "Drive upload is enabled, but GOOGLE_SERVICE_ACCOUNT_JSON or "
+            "GDRIVE_FOLDER_ID is not configured; skipping upload."
+        )
+        return
+    if not os.path.isfile(SERVICE_ACCOUNT_JSON):
+        _log(f"Service-account file not found: {SERVICE_ACCOUNT_JSON}")
         return
     if not os.path.exists(filepath):
         _log(f"File not found, skipping: {filepath}")

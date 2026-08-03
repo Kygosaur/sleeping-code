@@ -1,4 +1,10 @@
-agile-stratum-499202-h1-0a38856z...json
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*service-account*.json
+*service_account*.json
+agile-stratum-*.json
 *.json
 __pycache__/
 .vscode/

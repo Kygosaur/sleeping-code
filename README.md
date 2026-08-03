@@ -37,10 +37,10 @@ sleeping code/
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.12 (the version used by the Docker image)
 - Webcam (IR overhead camera recommended)
 - YOLOv11 pose model: `yolo11m-pose.pt` (place in project root)
-- Google Drive service account JSON key (for auto-upload)
+- Google Drive service account JSON key (optional, for auto-upload)
 
 ---
 
@@ -84,13 +84,17 @@ python run_all.py --hybrid
 
 1. Create a service account in Google Cloud Console
 2. Download the JSON key and place it somewhere safe (do **not** commit it)
-3. Update the path in `pose_engine.py`:
-```python
-SERVICE_ACCOUNT_JSON = r"path/to/your-key.json"
-GDRIVE_FOLDER_ID     = "your_folder_id_here"
+3. Use `.env.example` as a safe template for the required variable names
+4. Export the variables before launching the application. For example, in PowerShell:
+```powershell
+$env:GDRIVE_ENABLED = "true"
+$env:GOOGLE_SERVICE_ACCOUNT_JSON = "C:\secure\service-account.json"
+$env:GDRIVE_FOLDER_ID = "your-folder-id"
+python Gui.py
 ```
 
-> The JSON key is excluded from this repo via `.gitignore` for security.
+Drive upload is disabled by default. Credential JSON files and local `.env` files
+are excluded by `.gitignore`; `.env.example` contains placeholders only.
 
 ---
 
